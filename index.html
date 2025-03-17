@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Манчкин - Счетчик</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Манчкин - Счетчик</h1>
+            <button id="add-player-btn" class="btn primary"><i class="fas fa-user-plus"></i> Добавить игрока</button>
+        </header>
+
+        <main>
+            <div id="players-container" class="players-container">
+                <!-- Players will be added here dynamically -->
+            </div>
+
+            <div id="combat-container" class="combat-container hidden">
+                <h2>Бой</h2>
+                <div class="combat-teams">
+                    <div class="team">
+                        <h3>Команда игроков</h3>
+                        <div id="player-team" class="team-members"></div>
+                        <div class="team-stats">
+                            <div class="stat">
+                                <span>Общая сила:</span>
+                                <span id="player-team-power">0</span>
+                            </div>
+                            <div class="combat-modifiers">
+                                <button id="player-team-add-mod" class="btn small"><i class="fas fa-plus"></i></button>
+                                <span id="player-team-mod">0</span>
+                                <button id="player-team-sub-mod" class="btn small"><i class="fas fa-minus"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="team-vs">VS</div>
+                    
+                    <div class="team">
+                        <h3>Монстры</h3>
+                        <div id="monster-team" class="team-members"></div>
+                        <button id="add-monster-btn" class="btn secondary"><i class="fas fa-dragon"></i> Добавить монстра</button>
+                        <div class="team-stats">
+                            <div class="stat">
+                                <span>Общая сила:</span>
+                                <span id="monster-team-power">0</span>
+                            </div>
+                            <div class="combat-modifiers">
+                                <button id="monster-team-add-mod" class="btn small"><i class="fas fa-plus"></i></button>
+                                <span id="monster-team-mod">0</span>
+                                <button id="monster-team-sub-mod" class="btn small"><i class="fas fa-minus"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="combat-result">
+                    <div class="result-display">
+                        <div class="team-result">
+                            <span>Игроки:</span>
+                            <span id="player-final-power">0</span>
+                        </div>
+                        <div class="team-result">
+                            <span>Монстры:</span>
+                            <span id="monster-final-power">0</span>
+                        </div>
+                    </div>
+                    <div class="result-message" id="result-message">Начните бой!</div>
+                    <div class="combat-buttons">
+                        <button id="calculate-btn" class="btn primary">Рассчитать</button>
+                        <button id="end-combat-btn" class="btn secondary">Завершить бой</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <button id="start-combat-btn" class="btn primary"><i class="fas fa-sword"></i> Начать бой</button>
+        </footer>
+    </div>
+
+    <!-- Templates -->
+    <template id="player-template">
+        <div class="player-card" data-player-id="">
+            <div class="player-header">
+                <input type="text" class="player-name" placeholder="Имя игрока">
+                <button class="btn small remove-player"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="player-stats">
+                <div class="stat">
+                    <span>Уровень:</span>
+                    <div class="stat-control">
+                        <button class="btn small level-down"><i class="fas fa-minus"></i></button>
+                        <span class="level-value">1</span>
+                        <button class="btn small level-up"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+                <div class="stat">
+                    <span>Бонусы:</span>
+                    <div class="stat-control">
+                        <button class="btn small bonus-down"><i class="fas fa-minus"></i></button>
+                        <span class="bonus-value">0</span>
+                        <button class="btn small bonus-up"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+                <div class="stat">
+                    <span>Сила:</span>
+                    <span class="power-value">1</span>
+                </div>
+            </div>
+            <div class="player-actions">
+                <button class="btn small join-combat hidden">Присоединиться к бою</button>
+                <button class="btn small leave-combat hidden">Покинуть бой</button>
+            </div>
+        </div>
+    </template>
+
+    <template id="monster-template">
+        <div class="monster-card" data-monster-id="">
+            <div class="monster-header">
+                <input type="text" class="monster-name" placeholder="Название монстра">
+                <button class="btn small remove-monster"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="monster-stats">
+                <div class="stat">
+                    <span>Уровень:</span>
+                    <div class="stat-control">
+                        <button class="btn small monster-level-down"><i class="fas fa-minus"></i></button>
+                        <span class="monster-level-value">1</span>
+                        <button class="btn small monster-level-up"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+                <div class="stat">
+                    <span>Модификаторы:</span>
+                    <div class="stat-control">
+                        <button class="btn small monster-mod-down"><i class="fas fa-minus"></i></button>
+                        <span class="monster-mod-value">0</span>
+                        <button class="btn small monster-mod-up"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+                <div class="stat">
+                    <span>Сила:</span>
+                    <span class="monster-power-value">1</span>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
